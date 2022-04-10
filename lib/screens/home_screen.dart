@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_wallet/constants/controllers.dart';
-import 'package:password_wallet/models/wallet_item.dart';
+import 'package:password_wallet/controllers/password_controller.dart';
 import 'package:password_wallet/screens/create_item.dart';
-import 'package:password_wallet/widgets/custom_text.dart';
 import 'package:password_wallet/widgets/wallet_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   AnimationController? animationController;
-  List<WalletItem> items = passwordController.loadItems();
   @override
   void initState() {
     animationController =
@@ -41,20 +38,23 @@ class _HomeScreenState extends State<HomeScreen>
           child: const Icon(Icons.add),
         ),
       ),
-      body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            animationController!.forward();
-            return WalletItemCard(
-              walletItem: items[index],
-              animationController: animationController,
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                      parent: animationController!,
-                      curve: Interval((1 / items.length) * index, 1.0,
-                          curve: Curves.fastOutSlowIn))),
-            );
-          }),
+      body: GetX<PasswordController>(builder: (PasswordController controller) {
+        return ListView.builder(
+            itemCount: controller.walletItems.length,
+            itemBuilder: (context, index) {
+              animationController!.forward();
+              return WalletItemCard(
+                walletItemIdx: index,
+                animationController: animationController,
+                animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                        parent: animationController!,
+                        curve: Interval(
+                            (1 / controller.walletItems.length) * index, 1.0,
+                            curve: Curves.fastOutSlowIn))),
+              );
+            });
+      }),
     );
   }
 }

@@ -4,13 +4,14 @@ import 'package:password_wallet/models/wallet_item.dart';
 
 class PasswordController extends GetxController {
   static PasswordController instance = Get.find();
-  var products = <WalletItem>[].obs;
+  var walletItems = <WalletItem>[].obs;
   Box walletBox = Hive.box('walletItems');
 
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
-    // products.bindStream(loadItems());
+    loadItems();
+    walletItems.bindStream(fetchItems());
   }
 
   storeItem(String name, String userName, String password) {
@@ -19,7 +20,14 @@ class PasswordController extends GetxController {
     walletBox.add(createWalletItem);
   }
 
+  Stream<List<WalletItem>> fetchItems() {
+    return walletBox
+        .watch()
+        .map((event) => walletBox.values.toList().cast<WalletItem>());
+  }
+
   loadItems() {
-    return walletBox.values.toList().cast<WalletItem>();
+    walletItems.value = walletBox.values.toList().cast<WalletItem>();
+    update();
   }
 }

@@ -41,6 +41,7 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_secure_storage: ^5.0.2
   flutter_password_strength: ^0.1.6
+  flutter_slidable: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -70,11 +71,11 @@ flutter:
     - assets/images/
 
   fonts:
-    - family: Roboto_Mono
+    - family: AnekTamil
       fonts:
-        - asset: assets/fonts/Roboto_Mono/RobotoMono-Regular.ttf
-        - asset: assets/fonts/Roboto_Mono/RobotoMono-Bold.ttf
-        - asset: assets/fonts/Roboto_Mono/RobotoMono-Light.ttf
+        - asset: assets/fonts/AnekTamil/AnekTamil-Regular.ttf
+        - asset: assets/fonts/AnekTamil/AnekTamil-Bold.ttf
+        - asset: assets/fonts/AnekTamil/AnekTamil-Light.ttf
           weight: 700
 
   # To add assets to your application, add an assets section, like this:

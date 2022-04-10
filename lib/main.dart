@@ -42,10 +42,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Password Wallet',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Roboto_Mono'
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'AnekTamil'),
       home: const AuthenticationScreen(),
     );
   }

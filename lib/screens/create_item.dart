@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:password_wallet/constants/controllers.dart';
 import 'package:password_wallet/screens/home_screen.dart';
 import 'package:password_wallet/widgets/button.dart';
+import 'package:password_wallet/widgets/custom_text.dart';
 import 'package:password_wallet/widgets/text_field.dart';
 
 class CreateItemScreen extends StatefulWidget {
@@ -65,10 +66,14 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 20,
+            const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: CustomText(text: "Strength"),
             ),
-            FlutterPasswordStrength(password: password),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: FlutterPasswordStrength(password: password),
+            ),
             const SizedBox(
               height: 20,
             ),

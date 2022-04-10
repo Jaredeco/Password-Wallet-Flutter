@@ -36,17 +36,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width ?? MediaQuery.of(context).size.width * 0.6,
-      margin: const EdgeInsets.only(top: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Material(
-        color: Colors.white,
-        elevation: 1,
-        borderRadius: BorderRadius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: widget.width ?? MediaQuery.of(context).size.width * 0.6,
+        margin: const EdgeInsets.only(top: 30),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              offset: const Offset(0, 8),
+              blurRadius: 8,
+            ),
+          ],
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: TextFormField(
@@ -58,13 +63,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: InputDecoration(
                 icon: Icon(widget.txtIcon, color: Colors.black),
                 suffix: widget.isObscure != null
-                    ? IconButton(
-                        icon: Icon(
+                    ? InkWell(
+                        child: Icon(
                           _passwordVisible!
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
-                        onPressed: () { 
+                        onTap: () {
                           setState(() {
                             _passwordVisible = !_passwordVisible!;
                           });
