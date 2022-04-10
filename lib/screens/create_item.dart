@@ -27,6 +27,27 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
         key: _formKey,
         child: ListView(
           children: [
+            SafeArea(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.blue,
+                      ),
+                      onPressed: () => Get.back()),
+                  const CustomText(
+                    text: "Store Credentials",
+                    size: 40,
+                    weight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+            )),
             CustomTextField(
               txtController: nameTextController,
               txtIcon: Icons.person,
@@ -67,11 +88,11 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
               },
             ),
             const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: CustomText(text: "Strength"),
+              padding: EdgeInsets.all(15.0),
+              child: CustomText(text: "Strength", color: Colors.blue, weight: FontWeight.bold,),
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(15.0),
               child: FlutterPasswordStrength(password: password),
             ),
             const SizedBox(

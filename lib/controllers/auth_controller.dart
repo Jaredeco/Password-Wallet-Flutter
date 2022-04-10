@@ -26,9 +26,7 @@ class AuthController extends GetxController {
           localizedReason: 'Please authenticate to show account balance');
       update();
     } catch (e) {
-      if (e.toString() == 'NotAvailable') {
-        print("Not supported");
-      }
+      Get.snackbar("Error", e.toString());
     }
   }
 }

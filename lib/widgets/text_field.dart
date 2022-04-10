@@ -37,7 +37,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal:15.0),
       child: Container(
         width: widget.width ?? MediaQuery.of(context).size.width * 0.6,
         margin: const EdgeInsets.only(top: 30),
@@ -61,13 +61,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             validator: widget.validate,
             onChanged: widget.onChanged,
             decoration: InputDecoration(
-                icon: Icon(widget.txtIcon, color: Colors.black),
+                icon: Icon(widget.txtIcon, color: Colors.blue),
                 suffix: widget.isObscure != null
                     ? InkWell(
                         child: Icon(
                           _passwordVisible!
                               ? Icons.visibility
-                              : Icons.visibility_off,
+                              : Icons.visibility_off,color: Colors.blue,
                         ),
                         onTap: () {
                           setState(() {
@@ -79,7 +79,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 fillColor: Colors.white,
                 border: InputBorder.none,
                 hintText: widget.txtText,
-                hintStyle: const TextStyle(color: Colors.black)),
+                ),
           ),
         ),
       ),

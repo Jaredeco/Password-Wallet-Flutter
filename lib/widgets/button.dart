@@ -27,9 +27,16 @@ class CustomButton extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         onTap: onTap,
         child: Container(
-          decoration: const BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  offset: const Offset(0, 8),
+                  blurRadius: 8,
+                ),
+              ],
+              color: Colors.blue,
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Container(
             margin: const EdgeInsets.all(15),
             alignment: Alignment.center,

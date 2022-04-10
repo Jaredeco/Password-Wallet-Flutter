@@ -76,7 +76,8 @@ class _WalletItemCardState extends State<WalletItemCard> {
                                 leading: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: const [
-                                    Icon(Icons.lock, size: 24),
+                                    Icon(Icons.lock,
+                                        size: 24, color: Colors.blue),
                                     VerticalDivider(
                                       color: Colors.grey,
                                     ),
@@ -84,6 +85,8 @@ class _WalletItemCardState extends State<WalletItemCard> {
                                 ),
                                 title: CustomText(
                                   text: walletItem.name,
+                                  color: Colors.blue,
+                                  size: 22,
                                 ),
                                 subtitle: CustomText(text: walletItem.userName),
                                 trailing: IconButton(

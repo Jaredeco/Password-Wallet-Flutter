@@ -19,6 +19,7 @@ class WalletItemScreen extends StatefulWidget {
 class _WalletItemScreenState extends State<WalletItemScreen> {
   bool? isObscure = true;
   final txtController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +39,22 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
         ),
       ),
       body: ListView(children: [
-        const SafeArea(
+        SafeArea(
             child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CustomText(
-            text: "Details",
-            size: 30,
-            weight: FontWeight.bold,
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.blue),
+                  onPressed: () => Get.back()),
+              const CustomText(
+                text: "Details",
+                size: 40,
+                weight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ],
           ),
         )),
         dataSection("Title", walletItem.name!, 0),
@@ -60,8 +70,8 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
     return ListTile(
         leading: isPassword != null
             ? IconButton(
-                icon:
-                    Icon(isObscure! ? Icons.visibility : Icons.visibility_off),
+                icon: Icon(isObscure! ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.blue),
                 onPressed: () {
                   setState(() {
                     isObscure = !isObscure!;
@@ -71,60 +81,91 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
             : null,
         title: CustomText(
           text: title,
+          size: 22,
+          color: Colors.blue,
         ),
         subtitle: CustomText(
           text: isObscure == true && isPassword == true
               ? data.replaceAll(RegExp(r"."), "*")
               : data,
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            txtController.text = data;
-            Get.bottomSheet(Container(
-                color: Colors.white,
-                child: ListView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomText(
-                        text: "Edit $title",
-                        size: 30,
-                        weight: FontWeight.bold,
+        trailing: Wrap(
+          children: [
+            if (idx != 0)
+              IconButton(
+                  onPressed: () {
+                    idx == 1
+                        ? Clipboard.setData(
+                            ClipboardData(text: walletItem.userName))
+                        : Clipboard.setData(
+                            ClipboardData(text: walletItem.password));
+                    Get.snackbar("Copied!",
+                        "Data has been copied to system's clipboard.");
+                  },
+                  icon: const Icon(Icons.copy)),
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                txtController.text = data;
+                Get.bottomSheet(Container(
+                    color: Colors.white,
+                    child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Center(
+                              child: CustomText(
+                                  text: "Edit $title",
+                                  size: 40,
+                                  color: Colors.blue),
+                            ),
+                          ),
+                          CustomTextField(
+                            txtController: txtController,
+                            txtIcon: Icons.edit,
+                            isObscure: isPassword,
+                            txtText: title,
+                            validate: (text) {
+                              if (text == null || text.isEmpty) {
+                                return 'This field can not be empty!';
+                              }
+                              return null;
+                            },
+                          ),
+                          CustomButton(
+                              text: "Update",
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  WalletItem newWalletItem;
+                                  if (idx == 0) {
+                                    newWalletItem = WalletItem(
+                                        name: txtController.text,
+                                        userName: walletItem.userName,
+                                        password: walletItem.password);
+                                  } else if (idx == 1) {
+                                    newWalletItem = WalletItem(
+                                        name: walletItem.name,
+                                        userName: txtController.text,
+                                        password: walletItem.password);
+                                  } else {
+                                    newWalletItem = WalletItem(
+                                        name: walletItem.name,
+                                        userName: walletItem.userName,
+                                        password: txtController.text);
+                                  }
+                                  Hive.box('walletItems').putAt(
+                                      widget.walletItemIdx!, newWalletItem);
+                                  setState(() {});
+                                }
+                              })
+                        ],
                       ),
-                    ),
-                    CustomTextField(
-                        txtController: txtController,
-                        txtIcon: Icons.edit,
-                        isObscure: isPassword,
-                        txtText: title),
-                    CustomButton(
-                        text: "Update",
-                        onTap: () {
-                          WalletItem newWalletItem;
-                          if (idx == 0) {
-                            newWalletItem = WalletItem(
-                                name: txtController.text,
-                                userName: walletItem.userName,
-                                password: walletItem.password);
-                          } else if (idx == 1) {
-                            newWalletItem = WalletItem(
-                                name: walletItem.name,
-                                userName: txtController.text,
-                                password: walletItem.password);
-                          } else {
-                            newWalletItem = WalletItem(
-                                name: walletItem.name,
-                                userName: walletItem.userName,
-                                password: txtController.text);
-                          }
-                          Hive.box('walletItems')
-                              .putAt(widget.walletItemIdx!, newWalletItem);
-                          setState(() {});
-                        })
-                  ],
-                )));
-          },
+                    )));
+              },
+            ),
+          ],
         ));
   }
 }
