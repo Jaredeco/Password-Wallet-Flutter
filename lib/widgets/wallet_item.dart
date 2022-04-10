@@ -9,11 +9,14 @@ import 'package:password_wallet/screens/item_screen.dart';
 import 'package:password_wallet/widgets/custom_text.dart';
 
 class WalletItemCard extends StatefulWidget {
-  final int? walletItemIdx;
-  final AnimationController? animationController;
-  final Animation<double>? animation;
+  final int walletItemIdx;
+  final AnimationController animationController;
+  final Animation<double> animation;
   const WalletItemCard(
-      {Key? key, this.walletItemIdx, this.animationController, this.animation})
+      {Key? key,
+      required this.walletItemIdx,
+      required this.animationController,
+      required this.animation})
       : super(key: key);
 
   @override
@@ -24,15 +27,15 @@ class _WalletItemCardState extends State<WalletItemCard> {
   @override
   Widget build(BuildContext context) {
     WalletItem walletItem =
-        passwordController.walletItems[widget.walletItemIdx!];
+        passwordController.walletItems[widget.walletItemIdx];
     return AnimatedBuilder(
-        animation: widget.animationController!,
+        animation: widget.animationController,
         builder: (BuildContext context, Widget? child) {
           return FadeTransition(
-              opacity: widget.animation!,
+              opacity: widget.animation,
               child: Transform(
                   transform: Matrix4.translationValues(
-                      0.0, 30 * (1.0 - widget.animation!.value), 0.0),
+                      0.0, 30 * (1.0 - widget.animation.value), 0.0),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Slidable(
@@ -42,7 +45,7 @@ class _WalletItemCardState extends State<WalletItemCard> {
                             SlidableAction(
                               onPressed: (context) {
                                 Box walletBox = Hive.box('walletItems');
-                                walletBox.deleteAt(widget.walletItemIdx!);
+                                walletBox.deleteAt(widget.walletItemIdx);
                                 walletBox.compact();
                                 Get.snackbar("Item Deleted",
                                     "The Item has been deleted!");

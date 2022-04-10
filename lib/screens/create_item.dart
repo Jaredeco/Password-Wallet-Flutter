@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_password_strength/flutter_password_strength.dart';
 import 'package:get/get.dart';
 import 'package:password_wallet/constants/controllers.dart';
+import 'package:password_wallet/controllers/password_controller.dart';
 import 'package:password_wallet/screens/home_screen.dart';
 import 'package:password_wallet/widgets/button.dart';
 import 'package:password_wallet/widgets/custom_text.dart';
+import 'package:password_wallet/widgets/password_strength.dart';
 import 'package:password_wallet/widgets/text_field.dart';
 
 class CreateItemScreen extends StatefulWidget {
@@ -19,7 +20,15 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
   final userNameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String password = "";
+
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      passwordController.passwordChecking("");
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +51,6 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                   const CustomText(
                     text: "Store Credentials",
                     size: 40,
-                    weight: FontWeight.bold,
                     color: Colors.blue,
                   ),
                 ],
@@ -50,7 +58,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
             )),
             CustomTextField(
               txtController: nameTextController,
-              txtIcon: Icons.person,
+              txtIcon: Icons.title,
               txtText: "Title",
               validate: (text) {
                 if (text == null || text.isEmpty) {
@@ -73,12 +81,10 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
             CustomTextField(
               isObscure: true,
               txtController: passwordTextController,
-              txtIcon: Icons.person,
+              txtIcon: Icons.lock,
               txtText: "Password",
               onChanged: (text) {
-                setState(() {
-                  password = text;
-                });
+                passwordController.passwordChecking(text);
               },
               validate: (text) {
                 if (text == null || text.isEmpty) {
@@ -89,17 +95,21 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
             ),
             const Padding(
               padding: EdgeInsets.all(15.0),
-              child: CustomText(text: "Strength", color: Colors.blue, weight: FontWeight.bold,),
+              child: CustomText(
+                text: "Strength",
+                color: Colors.blue,
+                weight: FontWeight.bold,
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: FlutterPasswordStrength(password: password),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            GetX<PasswordController>(builder: (controller) {
+              return Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: PasswordStrength(
+                    password: controller.passwordStrengthQuery.value),
+              );
+            }),
             CustomButton(
-                text: "Create",
+                text: "Store",
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
                     passwordController.storeItem(

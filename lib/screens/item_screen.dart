@@ -3,14 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:password_wallet/constants/controllers.dart';
+import 'package:password_wallet/controllers/password_controller.dart';
 import 'package:password_wallet/models/wallet_item.dart';
 import 'package:password_wallet/widgets/button.dart';
 import 'package:password_wallet/widgets/custom_text.dart';
+import 'package:password_wallet/widgets/password_strength.dart';
 import 'package:password_wallet/widgets/text_field.dart';
 
 class WalletItemScreen extends StatefulWidget {
-  final int? walletItemIdx;
-  const WalletItemScreen({Key? key, this.walletItemIdx}) : super(key: key);
+  final int walletItemIdx;
+  const WalletItemScreen({Key? key, required this.walletItemIdx})
+      : super(key: key);
 
   @override
   State<WalletItemScreen> createState() => _WalletItemScreenState();
@@ -20,11 +23,10 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
   bool? isObscure = true;
   final txtController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     WalletItem walletItem =
-        passwordController.walletItems[widget.walletItemIdx!];
+        passwordController.walletItems[widget.walletItemIdx];
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
@@ -51,7 +53,6 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
               const CustomText(
                 text: "Details",
                 size: 40,
-                weight: FontWeight.bold,
                 color: Colors.blue,
               ),
             ],
@@ -59,14 +60,26 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
         )),
         dataSection("Title", walletItem.name!, 0),
         dataSection("User Name", walletItem.userName!, 1),
-        dataSection("Password", walletItem.password!, 2, isPassword: true)
+        dataSection("Password", walletItem.password!, 2, isPassword: true),
+        const Padding(
+          padding: EdgeInsets.all(15.0),
+          child: CustomText(
+            text: "Strength",
+            color: Colors.blue,
+            weight: FontWeight.bold,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: PasswordStrength(password: walletItem.password!),
+        ),
       ]),
     );
   }
 
   Widget dataSection(String title, String data, int idx, {bool? isPassword}) {
     WalletItem walletItem =
-        passwordController.walletItems[widget.walletItemIdx!];
+        passwordController.walletItems[widget.walletItemIdx];
     return ListTile(
         leading: isPassword != null
             ? IconButton(
@@ -107,6 +120,9 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
               icon: const Icon(Icons.edit, color: Colors.blue),
               onPressed: () {
                 txtController.text = data;
+                if (isPassword == true) {
+                  passwordController.passwordChecking(walletItem.password!);
+                }
                 Get.bottomSheet(Container(
                     color: Colors.white,
                     child: Form(
@@ -133,7 +149,30 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
                               }
                               return null;
                             },
+                            onChanged: isPassword == true
+                                ? (text) {
+                                    passwordController.passwordChecking(text);
+                                  }
+                                : null,
                           ),
+                          if (isPassword == true)
+                            const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: CustomText(
+                                text: "Strength",
+                                color: Colors.blue,
+                                weight: FontWeight.bold,
+                              ),
+                            ),
+                          if (isPassword == true)
+                            GetX<PasswordController>(builder: (controller) {
+                              return Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: PasswordStrength(
+                                    password:
+                                        controller.passwordStrengthQuery.value),
+                              );
+                            }),
                           CustomButton(
                               text: "Update",
                               onTap: () {
@@ -156,8 +195,9 @@ class _WalletItemScreenState extends State<WalletItemScreen> {
                                         password: txtController.text);
                                   }
                                   Hive.box('walletItems').putAt(
-                                      widget.walletItemIdx!, newWalletItem);
+                                      widget.walletItemIdx, newWalletItem);
                                   setState(() {});
+                                  Get.back();
                                 }
                               })
                         ],

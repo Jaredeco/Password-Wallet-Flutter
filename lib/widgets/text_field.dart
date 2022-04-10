@@ -6,8 +6,7 @@ class CustomTextField extends StatefulWidget {
   final String txtText;
   final bool? isObscure;
   final String? Function(String?)? validate;
-  final TextInputType? kbdType;
-  final double? width;
+
   final Function(String)? onChanged;
 
   const CustomTextField({
@@ -15,8 +14,6 @@ class CustomTextField extends StatefulWidget {
     required this.txtController,
     required this.txtIcon,
     required this.txtText,
-    this.width,
-    this.kbdType,
     this.validate,
     this.isObscure,
     this.onChanged,
@@ -37,9 +34,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal:15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Container(
-        width: widget.width ?? MediaQuery.of(context).size.width * 0.6,
         margin: const EdgeInsets.only(top: 30),
         decoration: BoxDecoration(
           boxShadow: [
@@ -55,31 +51,31 @@ class _CustomTextFieldState extends State<CustomTextField> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: TextFormField(
-            keyboardType: widget.kbdType,
             obscureText: _passwordVisible ?? false,
             controller: widget.txtController,
             validator: widget.validate,
             onChanged: widget.onChanged,
             decoration: InputDecoration(
-                icon: Icon(widget.txtIcon, color: Colors.blue),
-                suffix: widget.isObscure != null
-                    ? InkWell(
-                        child: Icon(
-                          _passwordVisible!
-                              ? Icons.visibility
-                              : Icons.visibility_off,color: Colors.blue,
-                        ),
-                        onTap: () {
-                          setState(() {
-                            _passwordVisible = !_passwordVisible!;
-                          });
-                        },
-                      )
-                    : null,
-                fillColor: Colors.white,
-                border: InputBorder.none,
-                hintText: widget.txtText,
-                ),
+              icon: Icon(widget.txtIcon, color: Colors.blue),
+              suffix: widget.isObscure != null
+                  ? InkWell(
+                      child: Icon(
+                        _passwordVisible!
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.blue,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible!;
+                        });
+                      },
+                    )
+                  : null,
+              fillColor: Colors.white,
+              border: InputBorder.none,
+              hintText: widget.txtText,
+            ),
           ),
         ),
       ),

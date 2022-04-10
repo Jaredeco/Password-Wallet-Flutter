@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
                   animationController!.forward();
                   return WalletItemCard(
                     walletItemIdx: index,
-                    animationController: animationController,
+                    animationController: animationController!,
                     animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                             parent: animationController!,

@@ -26,13 +26,16 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Icon(
-              Icons.close,
+              Icons.fingerprint,
               size: 70,
               color: Colors.blue,
             ),
-            const CustomText(
-              text: "Authentication Failed!",
-              size: 30,
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: CustomText(
+                text: "Authenticate",
+                size: 30,
+              ),
             ),
             CustomButton(
                 text: "Try Again", onTap: () => authController.authenticate())
