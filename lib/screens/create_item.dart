@@ -115,7 +115,7 @@ class _CreateItemScreenState extends State<CreateItemScreen> {
                     passwordController.storeItem(
                         nameTextController.text.trim(),
                         userNameTextController.text.trim(),
-                        passwordTextController.text.trim());
+                        passwordTextController.text);
                     Get.to(() => const HomeScreen());
                   }
                 })
